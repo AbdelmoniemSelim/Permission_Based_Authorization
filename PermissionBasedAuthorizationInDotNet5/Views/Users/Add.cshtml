@@ -36,10 +36,10 @@
     @for (int i = 0; i < Model.Roles.Count; i++)
     {
         <div class="form-check m-1">
-            <input type="hidden" asp-for="@Model.Roles[i].RoleName" />
+            <input type="hidden" asp-for="@Model.Roles[i].DisplayValue" />
             <input asp-for="@Model.Roles[i].IsSelected" class="form-check-input " />
             <label class="form-check-label" asp-for="@Model.Roles[i].IsSelected">
-                @Model.Roles[i].RoleName
+                @Model.Roles[i].DisplayValue
             </label>
         </div>
     }

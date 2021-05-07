@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using PermissionBasedAuthorizationInDotNet5.ViewModels;
+using System.Linq;
+using PermissionBasedAuthorizationInDotNet5.Contants;
 
 namespace PermissionBasedAuthorizationInDotNet5.Controllers
 {
@@ -33,6 +35,35 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
             }
             await _roleManager.CreateAsync(new IdentityRole(model.Name.Trim()));
             return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManagePermission(string roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+                return NotFound();
+
+            var roleClaims = _roleManager.GetClaimsAsync(role).Result.Select(c => c.Value).ToList();
+            var allClaims = Permissions.GenerateAllPermissions();
+            var allPermissions = allClaims.Select(p => new CheckBoxViewModel { DisplayValue = p }).ToList();
+
+            foreach (var permission in allPermissions)
+            {
+                if (roleClaims.Any(c => c == permission.DisplayValue))
+                    permission.IsSelected = true;
+            }
+
+            var viewModel = new PermissionsFormViewModel
+            {
+                RoleId = roleId,
+                RoleName = role.Name,
+                RoleClaims = allPermissions,
+            };
+
+            return View(viewModel);
         }
     }
 }

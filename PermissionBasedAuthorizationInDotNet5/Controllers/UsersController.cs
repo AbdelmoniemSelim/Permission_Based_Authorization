@@ -36,7 +36,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
         public async Task<IActionResult> Add()
         {
 
-            var roles = await _roleManager.Roles.Select(r => new RoleViewModel { RoleId = r.Id, RoleName = r.Name }).ToListAsync();
+            var roles = await _roleManager.Roles.Select(r => new CheckBoxViewModel { RoleId = r.Id, DisplayValue = r.Name }).ToListAsync();
 
             var ViewModel = new AddUserViewModel
             {
@@ -87,7 +87,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
                 return View(model);
             }
 
-            await _userManager.AddToRolesAsync(user, model.Roles.Where(a => a.IsSelected).Select(a => a.RoleName));
+            await _userManager.AddToRolesAsync(user, model.Roles.Where(a => a.IsSelected).Select(a => a.DisplayValue));
 
             return RedirectToAction(nameof(Index));
         }
@@ -157,10 +157,10 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
             {
                 UserId = user.Id,
                 UserName = user.UserName,
-                Roles = roles.Select(role => new RoleViewModel
+                Roles = roles.Select(role => new CheckBoxViewModel
                 {
                     RoleId = role.Id,
-                    RoleName = role.Name,
+                    DisplayValue = role.Name,
                     IsSelected = _userManager.IsInRoleAsync(user, role.Name).Result
                 }).ToList()
             };
@@ -180,11 +180,11 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
 
             foreach (var role in model.Roles)
             {
-                if (userRoles.Any(a => a == role.RoleName) && !role.IsSelected)
-                    await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                if (userRoles.Any(a => a == role.DisplayValue) && !role.IsSelected)
+                    await _userManager.RemoveFromRoleAsync(user, role.DisplayValue);
 
-                if (!userRoles.Any(a => a == role.RoleName) && role.IsSelected)
-                    await _userManager.AddToRoleAsync(user, role.RoleName);
+                if (!userRoles.Any(a => a == role.DisplayValue) && role.IsSelected)
+                    await _userManager.AddToRoleAsync(user, role.DisplayValue);
             }
             return RedirectToAction(nameof(Index));
         }

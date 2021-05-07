@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace PermissionBasedAuthorizationInDotNet5.ViewModels
 {
-    public class RoleViewModel
+    public class CheckBoxViewModel
     {
         public string RoleId { get; set; }
-        public string RoleName { get; set; }
+        public string DisplayValue { get; set; }
         public bool IsSelected { get; set; }
     }
 }

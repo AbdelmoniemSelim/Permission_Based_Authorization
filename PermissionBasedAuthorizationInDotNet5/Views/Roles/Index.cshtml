@@ -11,6 +11,7 @@
             <tr class="bg-primary text-white">
                 <th>Id</th>
                 <th>Role Name </th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +20,7 @@
                 <tr>
                     <td>@role.Id</td>
                     <td>@role.Name</td>
+                    <td> <a class="btn btn-primary"  asp-action="ManagePermission" asp-route-roleId="@role.Id">Manage Permission</a></td>
                 </tr>
             }
         </tbody>
