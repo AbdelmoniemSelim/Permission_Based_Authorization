@@ -38,8 +38,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> ManagePermission(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);

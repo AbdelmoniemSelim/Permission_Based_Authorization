@@ -22,42 +22,45 @@ namespace PermissionBasedAuthorizationInDotNet5.Seeds
             if (user == null)
             {
                 await userManager.CreateAsync(defaultUser, "P@ssw0rd321");
-                await userManager.AddToRoleAsync(defaultUser, Roles.Bassic.ToString());
+                await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
             }
         }
-        public static async Task SeedSuperAdminUserAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+
+        public static async Task SeedSuperAdminUserAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManger)
         {
             var defaultUser = new IdentityUser
             {
-                UserName = "superadmin@admin.com",
-                Email = "superadmin@admin.com",
+                UserName = "superadmin@domain.com",
+                Email = "superadmin@domain.com",
                 EmailConfirmed = true
             };
 
             var user = await userManager.FindByEmailAsync(defaultUser.Email);
+
             if (user == null)
             {
-                await userManager.CreateAsync(defaultUser, "P@ssw0rd321");
-                await userManager.AddToRolesAsync(defaultUser, new List<string> { Roles.Bassic.ToString(), Roles.Admin.ToString(), Roles.SuperAdmin.ToString() });
+                await userManager.CreateAsync(defaultUser, "P@ssword123");
+                await userManager.AddToRolesAsync(defaultUser, new List<string> { Roles.Basic.ToString(), Roles.Admin.ToString(), Roles.SuperAdmin.ToString() });
             }
 
-            await roleManager.SeedClaimForSuperUser();
+            await roleManger.SeedClaimsForSuperUser();
         }
-        private static async Task SeedClaimForSuperUser(this RoleManager<IdentityRole> roleManager)
+
+        private static async Task SeedClaimsForSuperUser(this RoleManager<IdentityRole> roleManager)
         {
             var adminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin.ToString());
-            await roleManager.AddPermissioClaims(adminRole, Type.Products.ToString());
+            await roleManager.AddPermissionClaims(adminRole, "Products");
         }
-        private static async Task AddPermissioClaims(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
+
+        public static async Task AddPermissionClaims(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
         {
             var allClaims = await roleManager.GetClaimsAsync(role);
             var allPermissions = Permissions.GeneratePermissionsList(module);
 
             foreach (var permission in allPermissions)
             {
-                if (!allClaims.Any(a => a.Type == Type.Permission.ToString() && a.Value == permission))
-
-                    await roleManager.AddClaimAsync(role, new Claim(Type.Permission.ToString(), permission));
+                if (!allClaims.Any(c => c.Type == "Permission" && c.Value == permission))
+                    await roleManager.AddClaimAsync(role, new Claim("Permission", permission));
             }
         }
 

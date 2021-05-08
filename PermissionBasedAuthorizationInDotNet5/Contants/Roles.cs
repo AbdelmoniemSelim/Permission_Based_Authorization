@@ -4,7 +4,7 @@
     {
         SuperAdmin,
         Admin,
-        Bassic
+        Basic
     }
 
     public enum Type

@@ -13,7 +13,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Seeds
             {
                 await roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
                 await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-                await roleManager.CreateAsync(new IdentityRole(Roles.Bassic.ToString()));
+                await roleManager.CreateAsync(new IdentityRole(Roles.Basic.ToString()));
             }
         }
     }
