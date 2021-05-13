@@ -7,7 +7,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Contants
 {
     public enum Modules
     {
-        Product,
+        Products,
         Stock, 
         Categories
     }

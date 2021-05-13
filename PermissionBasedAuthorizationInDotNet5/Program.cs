@@ -30,6 +30,7 @@ namespace PermissionBasedAuthorizationInDotNet5
 
                 await Seeds.DefaultRoles.SeedAsync(roleManager);
                 await Seeds.DefaultUsers.SeedBasicUserAsync(userManager);
+                await Seeds.DefaultUsers.SeedadminUserAsync(userManager);
                 await Seeds.DefaultUsers.SeedSuperAdminUserAsync(userManager, roleManager);
 
                 logger.LogInformation("Data Seeded");

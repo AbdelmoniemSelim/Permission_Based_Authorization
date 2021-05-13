@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using PermissionBasedAuthorizationInDotNet5.ViewModels;
 using System.Linq;
 using PermissionBasedAuthorizationInDotNet5.Contants;
+using System.Security.Claims;
 
 namespace PermissionBasedAuthorizationInDotNet5.Controllers
 {
@@ -36,10 +37,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
             await _roleManager.CreateAsync(new IdentityRole(model.Name.Trim()));
             return RedirectToAction(nameof(Index));
         }
-
-
-       
-        public async Task<IActionResult> ManagePermission(string roleId)
+        public async Task<IActionResult> ManagePermissions(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
@@ -63,6 +61,26 @@ namespace PermissionBasedAuthorizationInDotNet5.Controllers
             };
 
             return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManagePermissions(PermissionsFormViewModel model)
+        {
+            var role = await _roleManager.FindByIdAsync(model.RoleId);
+            if (role == null)
+                return NotFound();
+
+            var roleClaims = await _roleManager.GetClaimsAsync(role);
+
+            foreach (var claim in roleClaims)
+                await _roleManager.RemoveClaimAsync(role, claim);
+
+            var selectedClaims = model.RoleClaims.Where(c => c.IsSelected).ToList();
+
+            foreach (var claim in selectedClaims)
+                await _roleManager.AddClaimAsync(role, new Claim("Permission", claim.DisplayValue));
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

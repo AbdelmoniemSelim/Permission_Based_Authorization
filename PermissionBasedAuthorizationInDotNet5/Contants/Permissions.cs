@@ -12,10 +12,10 @@ namespace PermissionBasedAuthorizationInDotNet5.Contants
         {
             return new List<string>()
             {
-                $"Permission.{module}.View",
-                $"Permission.{module}.Create",
-                $"Permission.{module}.Edit",
-                $"Permission.{module}.Delete",
+                $"Permissions.{module}.View",
+                $"Permissions.{module}.Create",
+                $"Permissions.{module}.Edit",
+                $"Permissions.{module}.Delete",
             };
         }
 
@@ -27,6 +27,13 @@ namespace PermissionBasedAuthorizationInDotNet5.Contants
                 allPermissions.AddRange(GeneratePermissionsList(module.ToString()));
 
             return allPermissions;
+        }
+        public static class Products
+        {
+            public const string View = "Permissions.Products.View";
+            public const string Create = "Permissions.Products.Create";
+            public const string Edit = "Permissions.Products.Edit";
+            public const string Delete = "Permissions.Products.Delete";
         }
     }
 }

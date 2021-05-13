@@ -25,13 +25,29 @@ namespace PermissionBasedAuthorizationInDotNet5.Seeds
                 await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
             }
         }
+        public static async Task SeedadminUserAsync(UserManager<IdentityUser> userManager)
+        {
+            var defaultUser = new IdentityUser
+            {
+                UserName = "admin@admin.com",
+                Email = "admin@admin.com",
+                EmailConfirmed = true
+            };
+
+            var user = await userManager.FindByEmailAsync(defaultUser.Email);
+            if (user == null)
+            {
+                await userManager.CreateAsync(defaultUser, "P@ssw0rd321");
+                await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
+            }
+        }
 
         public static async Task SeedSuperAdminUserAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManger)
         {
             var defaultUser = new IdentityUser
             {
-                UserName = "superadmin@domain.com",
-                Email = "superadmin@domain.com",
+                UserName = "superadmin@admin.com",
+                Email = "superadmin@admin.com",
                 EmailConfirmed = true
             };
 
@@ -39,7 +55,7 @@ namespace PermissionBasedAuthorizationInDotNet5.Seeds
 
             if (user == null)
             {
-                await userManager.CreateAsync(defaultUser, "P@ssword123");
+                await userManager.CreateAsync(defaultUser, "P@ssw0rd321");
                 await userManager.AddToRolesAsync(defaultUser, new List<string> { Roles.Basic.ToString(), Roles.Admin.ToString(), Roles.SuperAdmin.ToString() });
             }
 
